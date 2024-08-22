@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pets Victoria</title>
+    <link rel="stylesheet" href="css/add.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ysabeau+SC&family=Poetsen+One&family=Permanent+Marker&display=swap">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html"><img src="images/logo.png" alt="Pets Victoria Logo" class="logo"></a>
+            <select id="menu" onchange="navigate()">
+                <option value="index.html">Select an Option...</option>
+                <option value="index.html">Home</option>
+                <option value="pets.html">Pets</option>
+                <option value="add.html">Add More</option>
+                <option value="gallery.html">Gallery</option>
+            </select>
+            <form>
+                <input type="text" placeholder="Search">
+            </form>
+        </nav>
+    </header>
+    
+    <main class="add-page">
+        <h2>Add a Pet</h2>
+        <p>You can add a new pet here</p>
+
+        <form id="add-pet-form">
+            <label for="pet-name">Pet Name: <span>*</span></label>
+            <input type="text" id="pet-name" name="pet-name" required placeholder="Provide a name for the pet">
+
+            <label for="pet-type">Type: <span>*</span></label>
+            <select id="pet-type" name="pet-type" required>
+                <option value="">--Choose an option--</option>
+                <option value="dog">Dog</option>
+                <option value="cat">Cat</option>
+                <option value="bird">Bird</option>
+                <option value="other">Other</option>
+            </select>
+
+            <label for="description">Description: <span>*</span></label>
+            <textarea id="description" name="description" required placeholder="Describe the pet briefly"></textarea>
+
+            <label for="image">Select an Image: <span>*</span></label>
+            <input type="file" id="image" name="image" accept="image/*" required>
+            <small>Max image size: 500px</small>
+
+            <label for="caption">Image Caption: <span>*</span></label>
+            <input type="text" id="caption" name="caption" required placeholder="Describe the image in one word">
+
+            <label for="age">Age (months): <span>*</span></label>
+            <input type="number" id="age" name="age" required placeholder="Age of a pet in months">
+
+            <label for="location">Location: <span>*</span></label>
+            <input type="text" id="location" name="location" required placeholder="Location of the pet">
+
+            <div class="form-buttons">
+                <button type="submit">Submit</button>
+                <button type="reset">Clear</button>
+            </div>
+        </form>
+    </main>
+    
+    <footer>
+        <p>&copy; Copyright S4095696 Joshua Di Vito, All Rights Reserved | Designed for Pets Victoria</p>
+    </footer>
+    
+    <script src="js/main.js"></script>
+</body>
+</html>

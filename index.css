@@ -1,0 +1,77 @@
+/* Body and Layout */
+body {
+    font-family: 'Ysabeau SC', sans-serif;
+    margin: 0 auto;
+    width: 1200px;
+    background-color: #FCF9EA; 
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header, footer {
+    background-color: #0C7F82; 
+    padding: 20px;
+    text-align: center;
+    color: white; 
+}
+
+header {
+    flex-shrink: 0;
+}
+
+main {
+    flex-grow: 1;
+    padding: 20px;
+    text-align: left; 
+}
+
+/* Logo */
+.logo {
+    float: left;
+    width: 50px;
+    height: 50px;
+}
+
+/* Navigation */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+select, form input[type="text"] {
+    margin-left: 20px;
+}
+
+/* Main Content */
+h1 {
+    font-family: 'Permanent Marker', cursive;
+    color: orange; 
+	font-size: 80px;
+}
+
+h2 {
+    color: green;
+	font-size: 40px;
+}
+
+.main-image {
+    float: right;
+    border-radius: 50%;
+    max-width: 50%;
+    box-shadow: 0 0 20px yellow; 
+}
+
+/* Footer */
+footer {
+    font-family: 'Poetsen One', sans-serif;
+    flex-shrink: 0;
+    color: white;
+	background-color: orange;
+}
+
+/* Common Styles */
+* {
+    box-sizing: border-box;
+}

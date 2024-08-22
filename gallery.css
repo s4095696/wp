@@ -1,0 +1,147 @@
+/* gallery.css */
+.gallery-page {
+    font-family: 'Ysabeau SC', sans-serif;
+    margin: 0 auto;
+    width: 1200px;
+    background-color: #FCF9EA;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.logo {
+    height: 50px;
+    width: 50px;
+}
+
+header, footer {
+    background-color: #0C7F82;
+    padding: 20px;
+    text-align: center;
+    color: white; 
+    border-radius: 20px; 
+    margin: 10px; 
+}
+
+header {
+    flex-shrink: 0;
+}
+header {
+    background-color: #0C7F82;
+    padding: 20px;
+    color: white;
+    border-radius: 20px;
+    margin: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    height: 50px;
+    width: 50px;
+    margin-right: 10px;
+}
+
+.search-form {
+    margin-right: 20px;
+}
+
+select#menu {
+    margin-left: auto;
+}
+
+
+main {
+    flex-grow: 1;
+    padding: 20px;
+    text-align: center;
+}
+
+h2 {
+    font-family: 'Permanent Marker', cursive;
+    font-size: 40px;
+    color: #0C7F82;
+    text-align: center;
+}
+
+.gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.gallery-item {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.gallery-item:hover {
+    transform: scale(1.05);
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: 10px;
+    font-family: 'Poetsen One', sans-serif;
+}
+
+.gallery-item:hover .overlay {
+    opacity: 1;
+}
+
+.overlay span {
+    color: white;
+    font-size: 20px;
+    font-family: 'Poetsen One', sans-serif;
+}
+
+.gallery-item p {
+    margin-top: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+footer {
+    font-family: 'Poetsen One', sans-serif;
+    flex-shrink: 0;
+    color: white;
+	background-color: orange;
+    border-radius: 20px;
+    margin: 10px; 
+}
+
+/* Common Styles */
+* {
+    box-sizing: border-box;
+}

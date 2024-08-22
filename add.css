@@ -1,0 +1,124 @@
+/* General Styles */
+body {
+    font-family: 'Ysabeau SC', sans-serif;
+    margin: 0 auto;
+    width: 1200px;
+    background-color: #FCF9EA; 
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Header */
+header, footer {
+    background-color: #0C7F82;
+    padding: 20px;
+    text-align: center;
+    color: white; 
+    border-radius: 20px; /* Rounded corners */
+    margin: 10px; /* Spacing around the rounded corners */
+}
+
+header {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    width: 50px;
+    height: 50px;
+}
+
+header nav {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+}
+
+header nav select {
+    flex-grow: 1;
+}
+
+header nav form {
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Main Content */
+.add-page {
+    flex-grow: 1;
+    padding: 20px;
+}
+
+.add-page h2 {
+    font-family: 'Permanent Marker', cursive;
+    font-size: 40px;
+    color: #0C7F82;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.add-page form {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #F2F2F2;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.add-page form label {
+    display: block;
+    margin-bottom: 10px;
+    font-family: 'Poetsen One', sans-serif;
+    font-size: 18px;
+}
+
+.add-page form input[type="text"],
+.add-page form input[type="number"],
+.add-page form select,
+.add-page form textarea,
+.add-page form input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+.add-page form input[type="submit"],
+.add-page form button[type="reset"] {
+    background-color: #0C7F82;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.add-page form input[type="submit"]:hover,
+.add-page form button[type="reset"]:hover {
+    background-color: #095C60;
+}
+
+/* Footer */
+footer {
+    font-family: 'Poetsen One', sans-serif;
+    flex-shrink: 0;
+    color: white;
+    background-color: orange;
+    border-radius: 20px; /* Rounded corners */
+    margin: 10px; /* Spacing around the rounded corners */
+    text-align: center;
+}
+
+/* Common Styles */
+* {
+    box-sizing: border-box;
+}

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pets Victoria Gallery</title>
+    <link rel="stylesheet" href="css/gallery.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ysabeau+SC&family=Poetsen+One&family=Permanent+Marker&display=swap">
+</head>
+<body class="gallery-page">
+    <header>
+        <nav>
+            <div class="nav-left">
+                <a href="index.html"><img src="images/logo.png" alt="Pets Victoria Logo" class="logo"></a>
+                <form class="search-form">
+                    <input type="text" placeholder="Search">
+                </form>
+            </div>
+            <select id="menu" onchange="navigate()">
+                <option value="index.html">Select an Option...</option>
+                <option value="index.html">Home</option>
+                <option value="pets.html">Pets</option>
+                <option value="add.html">Add More</option>
+                <option value="gallery.html">Gallery</option>
+            </select>
+        </nav>
+    </header>
+    
+
+    <main>
+        <h2>Pets Victoria has a lot to offer!</h2>
+        <p>For almost two decades, Pets Victoria has helped in creating true social change by bringing pet adoption into the mainstream. Our work has helped make a difference to the Victorian rescue community and thousands of pets in need of rescue and rehabilitation. But, until every pet is safe, respected, and loved, we all still have big, hairy work to do.</p>
+        
+        <div class="gallery">
+            <div class="gallery-item">
+                <img src="images/cat1.jpeg" alt="Milo">
+                <div class="overlay">
+                    <span>Discover more!</span>
+                </div>
+                <p>Milo</p>
+            </div>
+            <div class="gallery-item">
+                <img src="images/dog1.jpeg" alt="Baxter">
+                <div class="overlay">
+                    <span>Discover more!</span>
+                </div>
+                <p>Baxter</p>
+            </div>
+            <div class="gallery-item">
+                <img src="images/cat2.jpeg" alt="Luna">
+                <div class="overlay">
+                    <span>Discover more!</span>
+                </div>
+                <p>Luna</p>
+            </div>
+            <div class="gallery-item">
+                <img src="images/dog2.jpeg" alt="Willow">
+                <div class="overlay">
+                    <span>Discover more!</span>
+                </div>
+                <p>Willow</p>
+            </div>
+            <div class="gallery-item">
+                <img src="images/cat3.jpeg" alt="Oliver">
+                <div class="overlay">
+                    <span>Discover more!</span>
+                </div>
+                <p>Oliver</p>
+            </div>
+            <div class="gallery-item">
+                <img src="images/dog3.jpeg" alt="Bella">
+                <div class="overlay">
+                    <span>Discover more!</span>
+                </div>
+                <p>Bella</p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; Copyright S4095696 Joshua Di Vito, All Rights Reserved | Designed for Pets Victoria</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
