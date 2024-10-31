@@ -1,123 +1,63 @@
 <?php
+session_start();
 include('includes/header.php');
 include('includes/nav.php');
-include('includes/db_connect.php');
+include('includes/db_connect.php'); // Database connection
 
-// Initialize variables for form data and error messages
-$petName = $petType = $description = $caption = $age = $location = "";
-$errors = [];
+$username = $password = $error = "";
 
-// Process the form if it's submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Collect form data
-    $petName = mysqli_real_escape_string($conn, $_POST['petName']);
-    $petType = mysqli_real_escape_string($conn, $_POST['petType']);
-    $description = mysqli_real_escape_string($conn, $_POST['description']);
-    $caption = mysqli_real_escape_string($conn, $_POST['caption']);
-    $age = (int)$_POST['age'];
-    $location = mysqli_real_escape_string($conn, $_POST['location']);
+    $username = mysqli_real_escape_string($conn, $_POST['username']);
+    $password = mysqli_real_escape_string($conn, $_POST['password']);
+    $encryptedPassword = sha1($password);
 
-    // Sanitize the pet name to use in the file name
-    $sanitizedPetName = preg_replace('/[^A-Za-z0-9]/', '', $petName); // Remove special characters
-    $targetDir = "images/"; // Directory for saving uploaded images
-    $imageFileType = strtolower(pathinfo($_FILES["image"]["name"], PATHINFO_EXTENSION));
-    $targetFile = $targetDir . $sanitizedPetName . '.' . $imageFileType;
+    $checkSql = "SELECT * FROM users WHERE username = ?";
+    $checkStmt = $conn->prepare($checkSql);
+    $checkStmt->bind_param("s", $username);
+    $checkStmt->execute();
+    $checkResult = $checkStmt->get_result();
 
-    // Check if image file is a valid image
-    $check = getimagesize($_FILES["image"]["tmp_name"]);
-    if ($check === false) {
-        $errors[] = "File is not an image.";
-    }
+    if ($checkResult->num_rows > 0) {
+        $error = "Username already taken.";
+    } else {
+        $regSql = "INSERT INTO users (username, password, reg_date) VALUES (?, ?, NOW())";
+        $regStmt = $conn->prepare($regSql);
+        $regStmt->bind_param("ss", $username, $encryptedPassword);
 
-    // Check file size (limit to 2MB)
-    if ($_FILES["image"]["size"] > 2000000) {
-        $errors[] = "Sorry, your file is too large.";
-    }
-
-    // Allow certain file formats
-    if (!in_array($imageFileType, ["jpg", "jpeg", "png", "gif"])) {
-        $errors[] = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-    }
-
-    // If no errors, try to upload the file
-    if (empty($errors)) {
-        if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetFile)) {
-            // Update the caption to match the new filename
-            $caption = basename($targetFile); // e.g., petname.jpg
-
-            // Prepare the SQL statement with the updated caption and image path
-            $sql = "INSERT INTO pets (petname, type, description, image, caption, age, location) 
-                    VALUES ('$petName', '$petType', '$description', '$targetFile', '$caption', $age, '$location')";
-            
-            if (mysqli_query($conn, $sql)) {
-                // Redirect to the gallery page after successful insertion
-                header("Location: gallery.php");
-                exit();
-            } else {
-                $errors[] = "Error: " . $sql . "<br>" . mysqli_error($conn);
-            }
+        if ($regStmt->execute()) {
+            $success = "User registered successfully! Please log in.";
         } else {
-            $errors[] = "Sorry, there was an error uploading your file.";
+            $error = "Error registering user.";
         }
+
+        $regStmt->close();
     }
 
-    // Close the database connection
-    mysqli_close($conn);
+    $checkStmt->close();
+    $conn->close();
 }
 ?>
 
-<style>
-    main {
-        padding: 20px; /* Adjust padding as needed */
-    }
-</style>
-
 <main>
-    <h1 class="text-center">Add a Pet</h1>
-    <p class="text-center">You can add a new pet here.</p>
+    <h1>Register</h1>
 
-    <form action="register.php" method="POST" enctype="multipart/form-data">
+    <form action="register.php" method="POST">
         <div class="form-group">
-            <label for="petName">Pet Name <span class="text-danger">*</span></label>
-            <input type="text" name="petName" id="petName" class="form-control" required alt="PROVIDE A NAME FOR THE PET" value="<?php echo htmlspecialchars($petName); ?>">
+            <label for="username">Username:</label>
+            <input type="text" name="username" id="username" class="form-control" required>
         </div>
         <div class="form-group">
-            <label for="petType">Type <span class="text-danger">*</span></label>
-            <select name="petType" id="petType" class="form-control" required alt="--CHOOSE AN OPTION--">
-                <option value="">--CHOOSE AN OPTION--</option>
-                <option value="cat" <?php echo ($petType == 'cat') ? 'selected' : ''; ?>>Cats</option>
-                <option value="dog" <?php echo ($petType == 'dog') ? 'selected' : ''; ?>>Dogs</option>
-            </select>
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" class="form-control" required>
         </div>
-        <div class="form-group">
-            <label for="description">Description <span class="text-danger">*</span></label>
-            <textarea name="description" id="description" class="form-control" required alt="DESCRIBE THE PET BRIEFLY"><?php echo htmlspecialchars($description); ?></textarea>
-        </div>
-        <div class="form-group">
-            <label for="image">Select an Image <span class="text-danger">*</span></label>
-            <input type="file" name="image" id="image" class="form-control" required alt="SELECT AN IMAGE:">
-        </div>
-        <div class="form-group">
-            <label for="caption">Image Caption <span class="text-danger">*</span></label>
-            <input type="text" name="caption" id="caption" class="form-control" required alt="DESCRIBE THE IMAGE IN ONE WORD" value="<?php echo htmlspecialchars($caption); ?>">
-        </div>
-        <div class="form-group">
-            <label for="age">Age <span class="text-danger">*</span></label>
-            <input type="number" name="age" id="age" class="form-control" required alt="AGE OF THE PET" value="<?php echo htmlspecialchars($age); ?>">
-        </div>
-        <div class="form-group">
-            <label for="location">Location <span class="text-danger">*</span></label>
-            <input type="text" name="location" id="location" class="form-control" required alt="LOCATION OF THE PET" value="<?php echo htmlspecialchars($location); ?>">
-        </div>
-        <button type="submit" class="btn btn-primary">Add Pet</button>
+        
+        <button type="submit" class="btn btn-primary">Register</button>
     </form>
 
-    <?php if (!empty($errors)): ?>
-        <div class="alert alert-danger">
-            <?php foreach ($errors as $error): ?>
-                <p><?php echo $error; ?></p>
-            <?php endforeach; ?>
-        </div>
+    <?php if (!empty($error)): ?>
+        <div class="alert alert-danger"><?php echo $error; ?></div>
+    <?php elseif (!empty($success)): ?>
+        <div class="alert alert-success"><?php echo $success; ?></div>
     <?php endif; ?>
 </main>
 
