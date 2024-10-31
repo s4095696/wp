@@ -1,13 +1,11 @@
 <?php
 include('includes/header.php');
 include('includes/nav.php');
-include('includes/db_connect.php'); // Database connection
+include('includes/db_connect.php');
 
-// Initialize variables
 $petName = $description = $age = $location = $type = $caption = "";
 $error = "";
 
-// Process form if submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $petName = mysqli_real_escape_string($conn, $_POST['petname']);
     $description = mysqli_real_escape_string($conn, $_POST['description']);
@@ -16,16 +14,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $type = mysqli_real_escape_string($conn, $_POST['type']);
     $caption = mysqli_real_escape_string($conn, $_POST['caption']);
     
-    // Handle image file upload
     if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-        $uploadDir = 'images/'; // Directory for storing uploaded files
-        $fileType = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION); // Get the file type
-        $fileName = $petName . '.' . $fileType; // Set the file name as petname.filetype
-        $uploadFile = $uploadDir . $fileName; // Path where the file will be saved
+        $uploadDir = 'images/'; 
+        $fileType = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION); 
+        $fileName = $petName . '.' . $fileType; 
+        $uploadFile = $uploadDir . $fileName; 
 
-        // Move the uploaded file to the designated folder
         if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadFile)) {
-            // Insert the new pet with the logged-in username
             $sql = "INSERT INTO pets (petname, description, image, caption, age, location, type, username) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt = $conn->prepare($sql);
             $stmt->bind_param("sssdssss", $petName, $description, $uploadFile, $caption, $age, $location, $type, $_SESSION['username']);
