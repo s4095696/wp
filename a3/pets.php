@@ -1,6 +1,6 @@
 <?php include 'includes/header.php'; ?>
 <?php include 'includes/nav.php'; ?>
-<?php include 'includes/db_connect.php'; // Include your database connection ?>
+<?php include 'includes/db_connect.php'; ?>
 
 <div class="container-fluid">
     <h2 class="text-center mt-4">Discover Pets Victoria</h2>
@@ -9,12 +9,10 @@
     </p>
 
     <div class="row mt-4">
-        <!-- Left Column: Image -->
         <div class="col-md-6 text-center">
             <img src="images/pets.jpeg" alt="Pets" style="width: 600px; height: 400px;" class="img-fluid">
         </div>
 
-        <!-- Right Column: Pets Table -->
         <div class="col-md-6">
             <table class="table table-striped">
                 <thead>
@@ -29,12 +27,12 @@
                 </thead>
                 <tbody>
                     <?php
-                    // Fetching pets from the database
+
                     $sql = "SELECT * FROM pets";
                     $result = $conn->query($sql);
 
                     if ($result->num_rows > 0) {
-                        // Output data for each pet
+
                         while ($row = $result->fetch_assoc()) {
                             echo "<tr>
                                     <td>{$row['petid']}</td>
