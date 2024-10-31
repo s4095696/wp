@@ -1,92 +1,75 @@
 <?php
+include('includes/db_connect.php');
 include('includes/header.php');
 include('includes/nav.php');
-include('includes/db_connect.php');
 
-$username = $password = "";
-$error = "";
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = mysqli_real_escape_string($conn, $_POST['username']);
-    $password = mysqli_real_escape_string($conn, $_POST['password']);
-    $encryptedPassword = sha1($password);
-
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['login'])) {
-        $sql = "SELECT userID, username FROM users WHERE username = ? AND password = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ss", $username, $encryptedPassword);
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+
+        $stmt = $conn->prepare("SELECT * FROM users WHERE username = ?");
+        $stmt->bind_param("s", $username);
         $stmt->execute();
         $result = $stmt->get_result();
+        $user = $result->fetch_assoc();
 
-        if ($result->num_rows === 1) {
-            $user = $result->fetch_assoc();
-            $_SESSION['userID'] = $user['userID'];
+        // Verify password
+        if ($user && sha1($password) === $user['password']) {
+            $_SESSION['logged_in'] = true; 
+            $_SESSION['userID'] = $user['userID']; 
             $_SESSION['username'] = $user['username'];
-            $_SESSION['logged_in'] = true;
-            header("Location: index.php");
+            header("Location: index.php"); 
             exit();
         } else {
-            $error = "Invalid username or password.";
+            $login_error = "Invalid username or password.";
         }
-        
-        $stmt->close();
     } elseif (isset($_POST['register'])) {
+        $new_username = $_POST['username'];
+        $new_password = sha1($_POST['password']);
+
+        // Check if the username already exists
         $checkSql = "SELECT * FROM users WHERE username = ?";
         $checkStmt = $conn->prepare($checkSql);
-        $checkStmt->bind_param("s", $username);
+        $checkStmt->bind_param("s", $new_username);
         $checkStmt->execute();
         $checkResult = $checkStmt->get_result();
 
         if ($checkResult->num_rows > 0) {
-            $error = "Username already taken.";
+            $register_error = "Username already exists.";
         } else {
-            $regSql = "INSERT INTO users (username, password, reg_date) VALUES (?, ?, NOW())";
-            $regStmt = $conn->prepare($regSql);
-            $regStmt->bind_param("ss", $username, $encryptedPassword);
-            
-            if ($regStmt->execute()) {
-                $success = "User registered successfully! Please log in.";
+            $stmt = $conn->prepare("INSERT INTO users (username, password, reg_date) VALUES (?, ?, NOW())");
+            $stmt->bind_param("ss", $new_username, $new_password);
+            if ($stmt->execute()) {
+                $register_success = "Registration successful! You can log in now.";
             } else {
-                $error = "Error registering user.";
+                $register_error = "Error in registration.";
             }
-
-            $regStmt->close();
         }
-
-        $checkStmt->close();
     }
-
-    $conn->close();
 }
 ?>
 
-<style>
-    main {
-        padding: 20px;
-    }
-</style>
+<body>
+    <div class="container">
+        <h2>Login</h2>
+        <?php if (isset($login_error)) echo "<p class='error'>$login_error</p>"; ?>
+        <form action="login.php" method="POST">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" name="username" id="username" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" name="password" id="password" class="form-control" required>
+            </div>
+            <button type="submit" name="login" class="btn btn-primary">Login</button>
+            <button type="submit" name="register" class="btn btn-secondary">Register</button>
+        </form>
 
-<main>
-    <h1>Login</h1>
-
-    <form action="login.php" method="POST">
-        <div class="form-group">
-            <label for="username">Username:</label>
-            <input type="text" name="username" id="username" class="form-control" required>
-        </div>
-        <div class="form-group">
-            <label for="password">Password:</label>
-            <input type="password" name="password" id="password" class="form-control" required>
-        </div>
-        
-        <button type="submit" name="login" class="btn btn-primary">Login</button>
-    </form>
-
-    <?php if (!empty($error)): ?>
-        <div class="alert alert-danger"><?php echo $error; ?></div>
-    <?php elseif (!empty($success)): ?>
-        <div class="alert alert-success"><?php echo $success; ?></div>
-    <?php endif; ?>
-</main>
-
+        <?php if (isset($register_error)) echo "<p class='error'>$register_error</p>"; ?>
+        <?php if (isset($register_success)) echo "<p class='success'>$register_success</p>"; ?>
+    </div>
+</body>
+</html>
 <?php include('includes/footer.php'); ?>
