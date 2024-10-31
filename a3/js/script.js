@@ -30,47 +30,19 @@ function logout() {
 }
 
 $(document).ready(function() {
-    $('#petType').on('change', function() {
-        var selectedType = $(this).val();
-        
-        $('.gallery-item').each(function() {
-            var petType = $(this).data('type');
-            
-            // Show all pets if 'all' is selected, otherwise filter by type
-            if (selectedType === 'all' || petType === selectedType) {
-                $(this).show();
-            } else {
-                $(this).hide();
-            }
-        });
-    });
-});
+    // Handle change event for pet type dropdown
+    $('#petType').change(function() {
+        var selectedType = $(this).val(); // Get selected value
 
-$(document).ready(function() {
-    // Save selected pet to session storage on click
-    $('.pet-link').on('click', function() {
-        var petId = $(this).data('petid');
-        var selectedPets = JSON.parse(sessionStorage.getItem('selectedPets')) || [];
-
-        // Prevent duplicates
-        if (!selectedPets.includes(petId)) {
-            selectedPets.push(petId);
-            sessionStorage.setItem('selectedPets', JSON.stringify(selectedPets));
+        // Show all pets if "all" is selected
+        if (selectedType === 'all') {
+            $('.gallery-item').show();
+        } else {
+            // Hide all pets and show only the selected type
+            $('.gallery-item').hide();
+            $('.gallery-item[data-type="' + selectedType.toLowerCase() + '"]').show();
         }
     });
-
-    // Existing pet type filtering code
-    $('#petType').on('change', function() {
-        var selectedType = $(this).val();
-        
-        $('.gallery-item').each(function() {
-            var petType = $(this).data('type');
-            if (selectedType === 'all' || petType === selectedType) {
-                $(this).show();
-            } else {
-                $(this).hide();
-            }
-        });
-    });
 });
+
 
