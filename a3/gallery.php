@@ -3,7 +3,6 @@ include('includes/header.php');
 include('includes/nav.php');
 include('includes/db_connect.php'); 
 
-// Fetch all unique pet types from the database
 $typeQuery = "SELECT DISTINCT type FROM pets";
 $typeResult = mysqli_query($conn, $typeQuery);
 
@@ -16,7 +15,6 @@ if ($typeResult) {
     echo "Error fetching pet types: " . mysqli_error($conn);
 }
 
-// Fetch all pets
 $query = "SELECT * FROM pets";
 $result = mysqli_query($conn, $query);
 
@@ -59,19 +57,16 @@ if ($result) {
         <?php endif; ?>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="js/script.js"></script>
     <script>
         $(document).ready(function() {
-            // Handle change event for pet type dropdown
             $('#petType').change(function() {
-                var selectedType = $(this).val(); // Get selected value
+                var selectedType = $(this).val(); 
 
-                // Show all pets if "all" is selected
                 if (selectedType === 'all') {
                     $('.gallery-item').show();
                 } else {
-                    // Hide all pets and show only the selected type
                     $('.gallery-item').hide();
                     $('.gallery-item[data-type="' + selectedType.toLowerCase() + '"]').show();
                 }
