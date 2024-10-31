@@ -3,17 +3,14 @@ include('includes/header.php');
 include('includes/nav.php');
 include('includes/db_connect.php');
 
-// Check if `petid` is provided in the URL
 if (!isset($_GET['petid'])) {
     echo "<p>Pet ID not specified. Please go back and select a pet to view details.</p>";
     include('includes/footer.php');
     exit();
 }
 
-// Sanitize and fetch the `petid` from the URL
-$petid = intval($_GET['petid']); // Ensures petid is an integer
+$petid = intval($_GET['petid']);
 
-// Fetch pet details using prepared statements
 $petQuery = "SELECT * FROM pets WHERE petid = ?";
 $petStmt = $conn->prepare($petQuery);
 
@@ -31,9 +28,8 @@ if ($petResult->num_rows == 0) {
     exit();
 }
 
-$pet = $petResult->fetch_assoc(); // Get the pet details
+$pet = $petResult->fetch_assoc();
 
-// Close the statement and connection
 $petStmt->close();
 $conn->close();
 ?>
