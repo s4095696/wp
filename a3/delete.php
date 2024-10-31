@@ -10,8 +10,7 @@ if (!isset($_SESSION['username'])) {
 
 if (isset($_GET['id'])) {
     $petId = intval($_GET['id']);
-    
-    // Fetch pet details for confirmation
+   
     $sql = "SELECT * FROM pets WHERE petid = $petId";
     $result = $conn->query($sql);
 
