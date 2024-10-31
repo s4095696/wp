@@ -25,7 +25,6 @@
                         <th>Age</th>
                         <th>Location</th>
                         <th>Type</th>
-                        <th>Image</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -44,7 +43,6 @@
                                     <td>{$row['age']}</td>
                                     <td>{$row['location']}</td>
                                     <td>{$row['type']}</td>
-                                    <td><img src='{$row['image']}' alt='{$row['petname']}' style='width: 100px; height: auto;'></td>
                                   </tr>";
                         }
                     } else {
