@@ -1,7 +1,7 @@
 <footer class="footer bg-orange text-white text-center py-3">
     <p>
-        <?php if (isset($_SESSION['username'])): ?>
-            <a href="details.php" class="text-white"><?php echo htmlspecialchars($_SESSION['username']); ?></a>
+        <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
+            <a href="user.php" class="text-white"><?php echo htmlspecialchars($_SESSION['username']); ?></a>
         <?php endif; ?>
     </p>
     <p>s4095696 Joshua Di Vito &copy; <?php echo date("Y"); ?> All Rights Reserved | Designed for Pets Victoria</p>
