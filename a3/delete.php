@@ -1,6 +1,7 @@
 <?php
-session_start();
-include 'includes/db_connect.php'; // Database connection
+include 'includes/db_connect.php'; 
+include 'includes/header.php'; 
+include 'includes/nav.php'; 
 
 if (!isset($_SESSION['username'])) {
     header("Location: login.php");
@@ -23,30 +24,17 @@ if (isset($_GET['id'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Delete pet
     $deleteSql = "DELETE FROM pets WHERE petid = $petId";
     
     if ($conn->query($deleteSql) === TRUE) {
-        // Optionally delete the image from the filesystem if necessary
-        unlink($pet['image']); // Ensure this path is correct
-        header("Location: pets.php"); // Redirect to pets page after deletion
+        unlink($pet['image']);
+        header("Location: pets.php");
         exit();
     } else {
         echo "Error deleting record: " . $conn->error;
     }
 }
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Delete Pet</title>
-    <link rel="stylesheet" href="path/to/bootstrap.css">
-</head>
-<body>
-<?php include 'includes/header.php'; ?>
-<?php include 'includes/nav.php'; ?>
 
 <div class="container">
     <h2>Delete Pet</h2>
