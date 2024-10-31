@@ -1,5 +1,4 @@
 <?php
-session_start();
 include('includes/header.php');
 include('includes/nav.php');
 include('includes/db_connect.php'); // Database connection
@@ -23,10 +22,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = $stmt->get_result();
 
         if ($result->num_rows === 1) {
-            // User found, set session and redirect
+            // User found, set session variables and redirect
             $user = $result->fetch_assoc();
             $_SESSION['userID'] = $user['userID'];
             $_SESSION['username'] = $user['username'];
+            $_SESSION['logged_in'] = true; // Set logged_in to true
             header("Location: index.php"); // Redirect to home or dashboard page
             exit();
         } else {
@@ -65,6 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $conn->close();
 }
 ?>
+
 <style>
     main {
         padding: 20px; /* Adjust padding as needed */
@@ -72,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </style>
 
 <main>
-    <h1>Login or Register</h1>
+    <h1>Login</h1>
 
     <form action="login.php" method="POST">
         <div class="form-group">
@@ -85,7 +86,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
         
         <button type="submit" name="login" class="btn btn-primary">Login</button>
-        <button type="submit" name="register" class="btn btn-secondary">Register</button>
     </form>
 
     <?php if (!empty($error)): ?>
