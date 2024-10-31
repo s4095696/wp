@@ -1,56 +1,50 @@
 <?php
 include('includes/header.php');
 include('includes/nav.php');
-include('includes/db_connect.php'); 
+include('includes/db_connect.php');
 
-// Fetch the pet details based on the pet ID from the URL
-$petId = isset($_GET['petid']) ? $_GET['petid'] : null;
-
-if ($petId) {
-    $query = "SELECT * FROM pets WHERE petid = ?";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("i", $petId);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $pet = $result->fetch_assoc();
+// Check if `petid` is provided in the URL
+if (!isset($_GET['petid'])) {
+    echo "<p>Pet ID not specified. Please go back and select a pet to view details.</p>";
+    include('includes/footer.php');
+    exit();
 }
 
-// Get selected pets from session storage
-$selectedPets = json_decode($_SESSION['selectedPets'] ?? '[]', true);
+// Sanitize and fetch the `petid` from the URL
+$petid = intval($_GET['petid']); // Ensures petid is an integer
 
-// Fetch additional selected pet details if needed
-$selectedPetDetails = [];
-if (!empty($selectedPets)) {
-    $placeholders = implode(',', array_fill(0, count($selectedPets), '?'));
-    $query = "SELECT * FROM pets WHERE petid IN ($placeholders)";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param(str_repeat('i', count($selectedPets)), ...$selectedPets);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    
-    while ($row = $result->fetch_assoc()) {
-        $selectedPetDetails[] = $row;
-    }
+// Fetch pet details using prepared statements
+$petQuery = "SELECT * FROM pets WHERE petid = ?";
+$petStmt = $conn->prepare($petQuery);
+
+if (!$petStmt) {
+    die("Prepare failed: " . $conn->error);
 }
+
+$petStmt->bind_param("i", $petid);
+$petStmt->execute();
+$petResult = $petStmt->get_result();
+
+if ($petResult->num_rows == 0) {
+    echo "<p>No pet found with the specified ID.</p>";
+    include('includes/footer.php');
+    exit();
+}
+
+$pet = $petResult->fetch_assoc(); // Get the pet details
+
+// Close the statement and connection
+$petStmt->close();
+$conn->close();
 ?>
 
 <main>
-    <h1><?php echo $pet['petname']; ?></h1>
-    <img src="<?php echo $pet['image']; ?>" alt="<?php echo $pet['petname']; ?>">
-    <p><?php echo $pet['description']; ?></p>
-
-    <h2>Your Selected Pets</h2>
-    <div class="selected-pets">
-        <?php if (!empty($selectedPetDetails)): ?>
-            <?php foreach ($selectedPetDetails as $selectedPet): ?>
-                <div class="selected-pet">
-                    <img src="<?php echo $selectedPet['image']; ?>" alt="<?php echo $selectedPet['petname']; ?>">
-                    <div><?php echo $selectedPet['petname']; ?></div>
-                </div>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <p>No selected pets yet.</p>
-        <?php endif; ?>
+    <h2><?php echo htmlspecialchars($pet['petname']); ?></h2>
+    <div class="pet-details">
+        <img src="<?php echo htmlspecialchars($pet['image']); ?>" alt="<?php echo htmlspecialchars($pet['petname']); ?>">
+        <p><strong>Description:</strong> <?php echo nl2br(htmlspecialchars($pet['description'])); ?></p>
+        <p><strong>Age:</strong> <?php echo htmlspecialchars($pet['age']); ?> years old</p>
+        <p><strong>Location:</strong> <?php echo htmlspecialchars($pet['location']); ?></p>
     </div>
 </main>
 
