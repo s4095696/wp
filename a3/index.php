@@ -1,25 +1,39 @@
 <?php include 'includes/header.php'; ?>
 <?php include 'includes/nav.php'; ?>
+<?php include 'includes/db_connect.php'; // Include your database connection ?>
 
-<div class="container-fluid carousel-welcome-section"> <!-- Added cream background for this section -->
-  <div class="row align-items-center" style="height: 50vh;"> <!-- Adjusts to 50% of the viewport height -->
-    <!-- Left Column: Carousel for recent pet images -->
+<div class="container-fluid carousel-welcome-section"> 
+  <div class="row align-items-center" style="height: 50vh;">
     <div class="col-md-6 text-center">
       <div id="petCarousel" class="carousel slide" data-ride="carousel">
         <div class="carousel-inner">
-          <div class="carousel-item active">
-            <img src="images/cat1.jpeg" class="d-block" style="width: 500px; height: 300px;" alt="Pet 1">
-          </div>
-          <div class="carousel-item">
-            <img src="images/dog1.jpeg" class="d-block" style="width: 500px; height: 300px;" alt="Pet 2">
-          </div>
-          <!-- More carousel items -->
+          <?php
+          // Fetch the last 4 pet entries from the database
+          $query = "SELECT * FROM pets ORDER BY petid DESC LIMIT 4";
+          $result = mysqli_query($conn, $query);
+
+          if (!$result) {
+              die("Database query failed: " . mysqli_error($conn));
+          }
+
+          $isFirst = true;
+          while ($pet = mysqli_fetch_assoc($result)) {
+              $activeClass = $isFirst ? 'active' : '';
+              echo "<div class='carousel-item $activeClass'>";
+              echo "<img src='{$pet['image']}' class='d-block' style='width: 500px; height: 300px;' alt='{$pet['petname']}'>"; // Use IMAGES directory
+              echo "<div class='carousel-caption d-none d-md-block'>"; // Add caption if needed
+              echo "</div></div>";
+              $isFirst = false;
+          }
+          ?>
         </div>
-        <a class="carousel-control-prev" href="#petCarousel" role="button" data-slide="prev">
+
+        <!-- Carousel controls -->
+        <a class="prev" href="#petCarousel" role="button" data-slide="prev">
           <span class="carousel-control-prev-icon" aria-hidden="true"></span>
           <span class="sr-only">Previous</span>
         </a>
-        <a class="carousel-control-next" href="#petCarousel" role="button" data-slide="next">
+        <a class="next" href="#petCarousel" role="button" data-slide="next">
           <span class="carousel-control-next-icon" aria-hidden="true"></span>
           <span class="sr-only">Next</span>
         </a>
@@ -46,8 +60,20 @@
       <div class="col-sm-2">
         <select class="form-control" name="pet_type">
           <option value="">Select your pet type</option>
-          <option value="dog">Dog</option>
-          <option value="cat">Cat</option>
+          <?php
+          // Query to get distinct pet types
+          $query = "SELECT DISTINCT type FROM pets";
+          $result = mysqli_query($conn, $query);
+
+          // Check for results and populate the dropdown
+          if ($result) {
+              while ($row = mysqli_fetch_assoc($result)) {
+                  echo '<option value="' . htmlspecialchars($row['type']) . '">' . htmlspecialchars($row['type']) . '</option>';
+              }
+          } else {
+              echo '<option value="">No pet types available</option>';
+          }
+          ?>
         </select>
       </div>
       <div class="col-sm-2">
@@ -56,6 +82,7 @@
     </div>
   </form>
 </div>
+
 
 <!-- Introduction to Pets Victoria -->
 <div class="about-section mt-4">
