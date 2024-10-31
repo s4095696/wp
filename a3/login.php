@@ -1,20 +1,17 @@
 <?php
 include('includes/header.php');
 include('includes/nav.php');
-include('includes/db_connect.php'); // Database connection
+include('includes/db_connect.php');
 
-// Initialize variables
 $username = $password = "";
 $error = "";
 
-// Process form if submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = mysqli_real_escape_string($conn, $_POST['username']);
     $password = mysqli_real_escape_string($conn, $_POST['password']);
-    $encryptedPassword = sha1($password); // Encrypt the password
+    $encryptedPassword = sha1($password);
 
-    if (isset($_POST['login'])) { // Login button clicked
-        // Query to check for matching username and encrypted password
+    if (isset($_POST['login'])) {
         $sql = "SELECT userID, username FROM users WHERE username = ? AND password = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("ss", $username, $encryptedPassword);
@@ -22,20 +19,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = $stmt->get_result();
 
         if ($result->num_rows === 1) {
-            // User found, set session variables and redirect
             $user = $result->fetch_assoc();
             $_SESSION['userID'] = $user['userID'];
             $_SESSION['username'] = $user['username'];
-            $_SESSION['logged_in'] = true; // Set logged_in to true
-            header("Location: index.php"); // Redirect to home or dashboard page
+            $_SESSION['logged_in'] = true;
+            header("Location: index.php");
             exit();
         } else {
             $error = "Invalid username or password.";
         }
         
         $stmt->close();
-    } elseif (isset($_POST['register'])) { // Register button clicked
-        // Check if username already exists
+    } elseif (isset($_POST['register'])) {
         $checkSql = "SELECT * FROM users WHERE username = ?";
         $checkStmt = $conn->prepare($checkSql);
         $checkStmt->bind_param("s", $username);
@@ -45,7 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($checkResult->num_rows > 0) {
             $error = "Username already taken.";
         } else {
-            // Insert new user into the database
             $regSql = "INSERT INTO users (username, password, reg_date) VALUES (?, ?, NOW())";
             $regStmt = $conn->prepare($regSql);
             $regStmt->bind_param("ss", $username, $encryptedPassword);
@@ -68,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <style>
     main {
-        padding: 20px; /* Adjust padding as needed */
+        padding: 20px;
     }
 </style>
 
