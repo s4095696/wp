@@ -12,6 +12,8 @@ if ($typeResult) {
     while ($row = mysqli_fetch_assoc($typeResult)) {
         $petTypes[] = $row['type'];
     }
+} else {
+    echo "Error fetching pet types: " . mysqli_error($conn);
 }
 
 // Fetch all pets
@@ -23,8 +25,11 @@ if ($result) {
     while ($row = mysqli_fetch_assoc($result)) {
         $pets[] = $row; 
     }
+} else {
+    echo "Error fetching pets: " . mysqli_error($conn);
 }
 ?>
+<link rel="stylesheet" href="css/style.css">
 
 <main>
     <h1 class="text-center">Pets Victoria has a lot to offer!</h1>
@@ -34,24 +39,45 @@ if ($result) {
         <select id="petType" class="form-control w-25 mx-auto mb-3">
             <option value="all">Select type...</option>
             <?php foreach ($petTypes as $type): ?>
-                <option value="<?php echo $type; ?>"><?php echo ucfirst($type); ?></option>
+                <option value="<?php echo htmlspecialchars($type); ?>"><?php echo ucfirst(htmlspecialchars($type)); ?></option>
             <?php endforeach; ?>
         </select>
     </div>
 
     <div class="gallery">
-    <?php foreach ($pets as $pet): ?>
-        <div class="gallery-item" data-type="<?php echo strtolower($pet['type']); ?>">
-            <a href="details.php?petid=<?php echo $pet['petid']; ?>" class="pet-link" data-petid="<?php echo $pet['petid']; ?>">
-                <img src="<?php echo $pet['image']; ?>" alt="<?php echo $pet['petname']; ?>">
-                <div class="pet-name"><?php echo $pet['petname']; ?></div>
-            </a>
-        </div>
-    <?php endforeach; ?>
-</div>
+        <?php if (empty($pets)): ?>
+            <p class="text-center">No pets available at the moment.</p>
+        <?php else: ?>
+            <?php foreach ($pets as $pet): ?>
+                <div class="gallery-item" data-type="<?php echo strtolower(htmlspecialchars($pet['type'])); ?>">
+                    <a href="details.php?petid=<?php echo htmlspecialchars($pet['petid']); ?>" class="pet-link" data-petid="<?php echo htmlspecialchars($pet['petid']); ?>">
+                        <img src="<?php echo htmlspecialchars($pet['image']); ?>" alt="<?php echo htmlspecialchars($pet['petname']); ?>">
+                        <div class="pet-name"><?php echo htmlspecialchars($pet['petname']); ?></div>
+                    </a>
+                </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Include jQuery -->
+    <script src="js/script.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Handle change event for pet type dropdown
+            $('#petType').change(function() {
+                var selectedType = $(this).val(); // Get selected value
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Include jQuery -->
-<script src="script.js"></script>
+                // Show all pets if "all" is selected
+                if (selectedType === 'all') {
+                    $('.gallery-item').show();
+                } else {
+                    // Hide all pets and show only the selected type
+                    $('.gallery-item').hide();
+                    $('.gallery-item[data-type="' + selectedType.toLowerCase() + '"]').show();
+                }
+            });
+        });
+    </script>
+</main>
 
 <?php include('includes/footer.php'); ?>
