@@ -2,7 +2,7 @@
 session_start();
 include('includes/header.php');
 include('includes/nav.php');
-include('includes/db_connect.php'); // Database connection
+include('includes/db_connect.php');
 
 $username = $password = $error = "";
 
