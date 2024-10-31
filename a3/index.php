@@ -1,6 +1,6 @@
 <?php include 'includes/header.php'; ?>
 <?php include 'includes/nav.php'; ?>
-<?php include 'includes/db_connect.php'; // Include your database connection ?>
+<?php include 'includes/db_connect.php';?>
 
 <div class="container-fluid carousel-welcome-section"> 
   <div class="row align-items-center" style="height: 50vh;">
@@ -8,7 +8,6 @@
       <div id="petCarousel" class="carousel slide" data-ride="carousel">
         <div class="carousel-inner">
           <?php
-          // Fetch the last 4 pet entries from the database
           $query = "SELECT * FROM pets ORDER BY petid DESC LIMIT 4";
           $result = mysqli_query($conn, $query);
 
@@ -28,7 +27,6 @@
           ?>
         </div>
 
-        <!-- Carousel controls -->
         <a class="prev" href="#petCarousel" role="button" data-slide="prev">
           <span class="carousel-control-prev-icon" aria-hidden="true"></span>
           <span class="sr-only">Previous</span>
@@ -40,7 +38,6 @@
       </div>
     </div>
 
-    <!-- Right Column: Welcome section -->
     <div class="col-md-6 text-center">
       <div class="welcome-section">
         <h1><span style="color: orange;">PETS VICTORIA</span></h1>
@@ -50,7 +47,6 @@
   </div>
 </div>
 
-<!-- Search bar and filters -->
 <div class="search-section mt-4">
   <form action="search.php" method="GET">
     <div class="form-group row">
@@ -60,12 +56,12 @@
       <div class="col-sm-2">
         <select class="form-control" name="pet_type">
           <option value="">Select your pet type</option>
+
           <?php
-          // Query to get distinct pet types
           $query = "SELECT DISTINCT type FROM pets";
           $result = mysqli_query($conn, $query);
 
-          // Check for results and populate the dropdown
+
           if ($result) {
               while ($row = mysqli_fetch_assoc($result)) {
                   echo '<option value="' . htmlspecialchars($row['type']) . '">' . htmlspecialchars($row['type']) . '</option>';
@@ -83,8 +79,6 @@
   </form>
 </div>
 
-
-<!-- Introduction to Pets Victoria -->
 <div class="about-section mt-4">
   <h3>Discover Pets Victoria</h3>
   <p>Pets Victoria is a dedicated pet adoption organization based in Victoria, Australia, focused on providing a safe and loving environment for pets in need. Our mission is to connect these deserving pets with caring families, creating lifelong bonds.</p>
